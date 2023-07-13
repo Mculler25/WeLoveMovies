@@ -1,4 +1,17 @@
-const { updateReviews, deleteReviews } = require("./reviews.service");
+const asyncErrorBoundary = require("../errors/asyncErrorBoundary");
+const hasProperties = require("../errors/hasProperties");
+const { updateReviews, deleteReviews, readReviews } = require("./reviews.service");
+
+
+async function restaurantExists(req, res, next) {
+    const review = await readReviews(req.params.reviewId);
+  
+    if (review) {
+      res.locals.review = review;
+      return next();
+    }
+    next({ status: 404, message: `Review cannot be found.` });
+  }
 
 const updateMovieReviews = async(req, res, next) => {
     const updatedReview = {
@@ -6,6 +19,7 @@ const updateMovieReviews = async(req, res, next) => {
         ...req.body.data,
         review_id: req.params.reviewId,
       };
+    console.log(updatedReview)
     res.json({ data : await updateReviews(updatedReview)})
 }
 
@@ -15,6 +29,13 @@ const deleteMovieReviews = async(req, res, next) => {
 }
 
 module.exports = {
-    updateMovieReviews,
-    deleteMovieReviews
+    updateMovieReviews : [
+        asyncErrorBoundary(restaurantExists),
+        hasProperties('score', 'content'),
+        asyncErrorBoundary(updateMovieReviews),
+    ],
+    deleteMovieReviews : [
+        asyncErrorBoundary(restaurantExists),
+        asyncErrorBoundary(deleteMovieReviews)
+    ]
 }
