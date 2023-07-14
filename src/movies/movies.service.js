@@ -1,3 +1,4 @@
+const { query } = require("express");
 const knex = require("../db/connection");
 const mapProperties = require("../utils/map-properties");
 
@@ -8,9 +9,14 @@ const list = () => {
 
 const areMoviesShowing = (showing) => {
     return knex("movies")
-        .select("*")
+        .select("movies.*", "movies_theaters.is_showing")
         .join("movies_theaters", "movies.movie_id", "movies_theaters.movie_id")
-        .where({is_showing : showing, theater_id : 1})   
+        .distinct("movies.movie_id")
+        .where({is_showing : true})
+        
+
+        
+          
 }
 
 const showMoviesId = (movieId) => {

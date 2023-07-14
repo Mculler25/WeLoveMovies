@@ -15,10 +15,10 @@ const listMovies = async(req, res, _next) => {
     const { is_showing } = req.query;
     if (is_showing === undefined) {
         res.json({ data : await list()});
-        return;
+        
     } else {
         res.json({ data: await areMoviesShowing(is_showing) });
-        return;
+        
     };
 }
 
