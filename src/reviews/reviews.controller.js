@@ -15,11 +15,11 @@ async function restaurantExists(req, res, next) {
 
 const updateMovieReviews = async(req, res, next) => {
     const updatedReview = {
-        ...res.locals.review,
+      ...res.locals.review,
         ...req.body.data,
         review_id: req.params.reviewId,
       };
-    console.log(updatedReview)
+    console.log("this is the updatedReview object",updatedReview)
     res.json({ data : await updateReviews(updatedReview)})
 }
 
@@ -31,7 +31,7 @@ const deleteMovieReviews = async(req, res, next) => {
 module.exports = {
     updateMovieReviews : [
         asyncErrorBoundary(restaurantExists),
-        hasProperties('score', 'content'),
+        // hasProperties('score', 'content'),
         asyncErrorBoundary(updateMovieReviews),
     ],
     deleteMovieReviews : [
