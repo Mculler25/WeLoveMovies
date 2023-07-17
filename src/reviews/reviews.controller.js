@@ -19,7 +19,6 @@ const updateMovieReviews = async(req, res, next) => {
         ...req.body.data,
         review_id: req.params.reviewId,
       };
-    console.log("this is the updatedReview object",updatedReview)
     res.json({ data : await updateReviews(updatedReview)})
 }
 
